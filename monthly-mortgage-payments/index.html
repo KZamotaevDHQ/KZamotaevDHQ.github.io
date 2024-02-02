@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Monthly Mortgage Calculator</title>
+		<link rel="stylesheet" href="../styles.css" type="text/css" >
+		<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+		<script src="../../src/mortgage-calculators.js"></script>
+		<script type="text/javascript">
+			var results;
+			
+			function clearResults() {
+				$(".form__error").html("");
+				$('.results').html("");
+			};
+		
+			$(function(){
+				$('body').on('submit','form',{},function(e){
+					e.preventDefault();	
+					// clear previous results
+					clearResults();
+					// get our inputs
+					var rawInputs = $(this).serializeArray();
+					// convert these to numbers and create our argument array
+					var args = {};
+					for(var i = 0; i < rawInputs.length; i++) {
+						args[rawInputs[i].name] = parseFloat(rawInputs[i].value);
+					}
+					// run the mortgage calculator
+					results = mortgageCalculators.monthlyMortgagePayments(args);
+					if(results.error) {
+						$(".form__error").html(results.error);
+					} else {
+						$('.results').html('<p> Monthly mortgage payments of ' + results + '</p>')
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+        <header>
+            <nav>
+                <ul>
+                <li><a href="../extra-monthly-payments/index.html">extra monthly payments</a></li>
+                <li><a href="../fifteen-vs-thirty-mortgage/index.html">fifteen vs thirty mortgage</a></li>
+                <li><a href="../fixed-rate-vs-arm/index.html">fixed rate vs arm</a></li>
+                <li><a href="../how-much-can-i-borrow/index.html">how much can i borrow</a></li>
+                <li><a href="../monthly-mortgage-payments/index.html">monthly mortgage payments</a></li>
+                <li><a href="../refinance-mortgage/index.html">refinance mortgage</a></li>
+                <li><a href="../should-i-buy-or-rent/index.html">should i buy or rent</a></li>
+                </ul>
+            </nav>
+        </header>
+		<form class="form">
+			<div class="form__entry">
+				<label class="form__entry-label" >Loan Amount</label>
+				<input type="text" class="form__entry-field" name="loanAmount" id="loanAmount" >
+			</div>
+			<div class="form__entry">
+				<label class="form__entry-label" >Interest Rate</label>
+				<input type="text" class="form__entry-field" name="interestRate" id="interestRate">
+			</div>
+			<div class="form__entry">
+				<label class="form__entry-label" >Term (Years)</label>
+				<input type="text" class="form__entry-field" name="termInYears" id="termInYears">
+			</div>
+			<div class="form__buttons">
+				<button class="btn" type="submit">Calculate</button>
+				<p class="form__error"></p>
+			</div>
+		</form>
+		<div class="results"></div>
+	</body>
+</html>
